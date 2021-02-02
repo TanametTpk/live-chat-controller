@@ -1,8 +1,7 @@
 import Chat from "../models/chat";
 import IKeyboardIOController from "../services/interfaces/IKeyboardIOController";
 import ILiveChatSubscriber from "../services/interfaces/ILiveChatSubscriber";
-import IMouseIOController, { MousePosition } from "../services/interfaces/IMouseIOController";
-import RobotJSIOController from "../services/RobotJSIOController";
+import IMouseIOController from "../services/interfaces/IMouseIOController";
 import KeywordBuilder from "../utils/KeywordBuilder";
 import IAction from "./Actions/interfaces/IAction";
 import KeyboardPressAction from "./Actions/KeyboardActions/KeyboardPressAction";
@@ -15,10 +14,9 @@ export default class LiveChatController implements ILiveChatSubscriber {
     private keyboardController: IKeyboardIOController
     private actions: IAction[] = []
 
-    public constructor() {
-        let ioController = new RobotJSIOController()
-        this.mouseController = ioController
-        this.keyboardController = ioController
+    public constructor(mouseController: IMouseIOController, keyboardController: IKeyboardIOController) {
+        this.mouseController = mouseController
+        this.keyboardController = keyboardController
         this.setupActions()
     }
 
