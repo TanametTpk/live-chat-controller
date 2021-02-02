@@ -5,9 +5,11 @@ export default class ChatCache implements IChatCache {
     private chat: Chat[] = []
     private chatMap: Map<string, Chat> = new Map()
     private MAXITEMS: number = 100
+    private isFirstTime: boolean
 
     public constructor(maxitems?: number) {
         if (maxitems) this.MAXITEMS = maxitems
+        this.isFirstTime = true
     }
 
     public store(chats: Chat[]): Chat[] {
@@ -31,6 +33,12 @@ export default class ChatCache implements IChatCache {
                 this.chatMap.delete(overChat.id)
             }
         }
+
+        if (this.isFirstTime) {
+            this.isFirstTime = false
+            return []
+        }
+
 
         return newChats
     }

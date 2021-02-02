@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "iohook": "^0.7.2",
     "puppeteer": "^5.5.0",
     "robotjs": "^0.6.0",
     "youtube-live-chat": "^1.0.3"

@@ -4,11 +4,11 @@ import robot from 'robotjs';
 
 export default class RobotJSIOController implements IMouseIOController, IKeyboardIOController {
     keyboardHold(key: string): void {
-        robot.keyTap(key, "down");
+        robot.keyToggle(key, "down");
     }
 
     keyboardRelease(key: string): void {
-        robot.keyTap(key, "up");
+        robot.keyToggle(key, "up");
     }
 
     mouseHold(key: MouseClickKey): void {
