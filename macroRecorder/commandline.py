@@ -422,6 +422,8 @@ def createFileIfNotExist(filename):
         saveMacros(macros, filename)
 
 def record(name, filename):
+    global macros
+    macros = loadMacros(filename)
     createNewMacro(name=name)
     saveMacros(macros, filename)
 

@@ -48,11 +48,14 @@ export default class MacroManager implements IMacroRecorder, IMacroPlayer {
         return this.instance
     }
 
-    private loadMacro() {
-        listCommands().then((macros: string[] | undefined) => {
-            if (!macros) return
-            this.avaliableMacros = macros
-        })
+    private async loadMacro() {
+        const macros: string[] | undefined = await listCommands()
+        if (!macros) {
+            this.avaliableMacros = []
+            return
+        }
+
+        this.avaliableMacros = macros
     }
 
     public play(marcoName: string){
@@ -74,16 +77,19 @@ export default class MacroManager implements IMacroRecorder, IMacroPlayer {
         return this.avaliableMacros
     }
     
-    public record(marcoName: string){
+    public async record(marcoName: string){
         if (this.isRecord) return
-        recordMacro(marcoName).then(this.loadMacro)
+        await recordMacro(marcoName)
+        this.loadMacro()
     }
 
-    public update(oldName: string, newName: string) {
-        renameMacro(oldName, newName).then(this.loadMacro)
+    public async update(oldName: string, newName: string) {
+        await renameMacro(oldName, newName)
+        this.loadMacro()
     }
 
-    public delete(macroName: string){
-        removeMacro(macroName).then(this.loadMacro)
+    public async delete(macroName: string){
+        await removeMacro(macroName)
+        this.loadMacro()
     }
 }
