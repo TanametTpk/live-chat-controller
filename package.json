@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-node --files ./src/test/adapter.spec.ts",
     "start": "node ./build/main.js",
     "dev": "ts-node --files ./src/main.ts",
     "build": "tsc -p ."
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "iohook": "^0.7.2",
     "puppeteer": "^5.5.0",
     "robotjs": "^0.6.0",
     "youtube-live-chat": "^1.0.3"

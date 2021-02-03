@@ -12,13 +12,13 @@ export default class MouseMoveAction extends FullMatchAction {
     do(command: string): void {
         let currentPosition: MousePosition = this.controller.getMousePosition()
         let diffPosition: MousePosition = {x: 0, y: 0}
-        let moveDistance: number = 10
+        let moveDistance: number = 100
         let strongFactor: number = 5
 
-        if (command.includes("up")) diffPosition.y += moveDistance
-        else if (command.includes("down")) diffPosition.y -= moveDistance
-        else if (command.includes("left")) diffPosition.x += moveDistance
-        else if (command.includes("right")) diffPosition.x -= moveDistance
+        if (command.includes("up")) diffPosition.y -= moveDistance
+        else if (command.includes("down")) diffPosition.y += moveDistance
+        else if (command.includes("left")) diffPosition.x -= moveDistance
+        else if (command.includes("right")) diffPosition.x += moveDistance
 
         if (command.includes("strong")) {
             diffPosition.x *= strongFactor
