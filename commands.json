@@ -95,6 +95,13 @@
                 "ur"
             ],
             "toCommand": "press w release"
+        },
+        {
+            "words": [
+                "ฆ่า",
+                "kill"
+            ],
+            "toCommand": "kill"
         }
     ],
     "useOnlyDefined": true
