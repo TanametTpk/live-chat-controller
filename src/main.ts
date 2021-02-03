@@ -11,13 +11,16 @@ import LiveChatAdapter from './services/LiveChatAdapter'
 import { loadCommandConfig, loadLiveChatConfig } from './utils/loadConfig'
 import AbstractLiveChatAdapter from './services/abstracts/AbstractLiveChatAdapter'
 import LiveChatCustomCommandAdapter from './services/LiveChatCustomCommandAdapter'
+import IMacroPlayer from './services/interfaces/IMacroPlayer'
+import MacroManager from './services/MacroManager'
 
 const liveChatConfig = loadLiveChatConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
 
 const ioController: RobotJSIOController = new RobotJSIOController()
+const macroController: IMacroPlayer = MacroManager.getInstance()
 
-const chatController: ILiveChatSubscriber = new LiveChatController(ioController, ioController)
+const chatController: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
 const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(liveChatConfig)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
