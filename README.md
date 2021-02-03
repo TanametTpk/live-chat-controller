@@ -9,6 +9,7 @@ Live chat controller is code for control your pc(window only) with live chat on 
 
 # Requirements
 - Node js
+- Python 3.6.5
 
 # บทนำ
 Live chat controller คือ โปรแกรมควบคุมคอม โดยดึงคำสั่งจาก live chat บน youtube
@@ -21,3 +22,4 @@ Live chat controller คือ โปรแกรมควบคุมคอม 
 
 # สื่งที่ต้องมี
 - ลง Node js ด้วย
+- ลง Python version 3.6.5
