@@ -1,0 +1,24 @@
+{
+    "commands": [
+        {
+            "words": [
+                "t"
+            ],
+            "toCommand": "single word"
+        },
+        {
+            "words": [
+                "t1",
+                "t2"
+            ],
+            "toCommand": "multiple word"
+        },
+        {
+            "words": [
+
+            ],
+            "toCommand": "no words defined"
+        }
+    ],
+    "useOnlyDefined": false
+}

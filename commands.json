@@ -97,5 +97,5 @@
             "toCommand": "press w release"
         }
     ],
-    "useOnlyDefined": false
+    "useOnlyDefined": true
 }
