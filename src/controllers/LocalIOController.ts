@@ -1,9 +1,14 @@
 import ICommandSubscriber from "../services/interfaces/ICommandSubscriber";
+import IMacroPlayer from "../services/interfaces/IMacroPlayer";
+import IMacroRecorder from "../services/interfaces/IMacroRecorder";
 import ResetableIOController from "../services/interfaces/ResetableIOController";
+import MacroManager from "../services/MacroManager";
 
 export default class LocalIOController implements ICommandSubscriber {
     private isRecording: boolean
     private ioController: ResetableIOController
+    private recordingMacroName: string = ""
+    private macroManager: IMacroRecorder & IMacroPlayer = MacroManager.getInstance()
 
     public constructor(ioController: ResetableIOController) {
         this.isRecording = false
@@ -25,16 +30,24 @@ export default class LocalIOController implements ICommandSubscriber {
 
         // do something
         this.isRecording = true
+        const max: number = Number.MAX_SAFE_INTEGER
+        const min: number = 1
+        const randomName: string = `macro-${Math.floor(Math.random() * (max - min) + min)}`
+        this.recordingMacroName = randomName
+        console.log("Recording...")
+        this.macroManager.record(randomName)
     }
 
     private stopRecordMacro() {
         if (this.isRecording){
             this.isRecording = false
+            console.log("Save macro as name:", this.recordingMacroName)
+            this.recordingMacroName = ""
         }
     }
 
     private reset() {
-        console.log("reset io controller");
+        console.log("Reset controller completed.");
         this.ioController.reset()
     }
 }

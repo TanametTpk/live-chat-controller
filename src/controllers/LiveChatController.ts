@@ -1,10 +1,12 @@
 import Chat from "../models/chat";
 import IKeyboardIOController from "../services/interfaces/IKeyboardIOController";
 import ILiveChatSubscriber from "../services/interfaces/ILiveChatSubscriber";
+import IMacroPlayer from "../services/interfaces/IMacroPlayer";
 import IMouseIOController from "../services/interfaces/IMouseIOController";
 import KeywordBuilder from "../utils/KeywordBuilder";
 import IAction from "./Actions/interfaces/IAction";
 import KeyboardPressAction from "./Actions/KeyboardActions/KeyboardPressAction";
+import MacroAction from "./Actions/MacroActions/MacroAction";
 import MouseClickAction from "./Actions/MouseActions/MouseClickAction";
 import MouseMoveAction from "./Actions/MouseActions/MouseMoveAction";
 import MouseScrollAction from "./Actions/MouseActions/MouseScrollAction";
@@ -12,11 +14,17 @@ import MouseScrollAction from "./Actions/MouseActions/MouseScrollAction";
 export default class LiveChatController implements ILiveChatSubscriber {
     private mouseController: IMouseIOController
     private keyboardController: IKeyboardIOController
+    private macroController: IMacroPlayer
     private actions: IAction[] = []
 
-    public constructor(mouseController: IMouseIOController, keyboardController: IKeyboardIOController) {
+    public constructor(
+        mouseController: IMouseIOController,
+        keyboardController: IKeyboardIOController,
+        macroController: IMacroPlayer
+    ) {
         this.mouseController = mouseController
         this.keyboardController = keyboardController
+        this.macroController = macroController
         this.setupActions()
     }
 
@@ -71,7 +79,9 @@ export default class LiveChatController implements ILiveChatSubscriber {
                 "numpad_9", 
             ], true)
             .addKeywords(["hold", "release"])
-            .build())
+            .build()),
+
+            new MacroAction(this.macroController)
         ]
     }
 
