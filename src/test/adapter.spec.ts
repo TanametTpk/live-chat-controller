@@ -7,7 +7,8 @@ import LiveChatCustomCommandAdapter from "../services/LiveChatCustomCommandAdapt
 import MockChatPublisher from "../services/MockChatPublisher"
 import { loadCommandConfig } from "../utils/loadConfig"
 
-const commandsConfig = loadCommandConfig('./commands.json')
+const commandsConfig = loadCommandConfig('./configs/commands.normal.json')
+// const commandsConfig = loadCommandConfig('./configs/commands.onlyDefined.json')
 
 const mockController: ILiveChatSubscriber = new MockChatController()
 const mockPublisher: ILiveChatPublisher = new MockChatPublisher([
