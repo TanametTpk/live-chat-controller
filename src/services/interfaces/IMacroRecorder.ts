@@ -1,5 +1,6 @@
 
 export default interface IMacroRecorder {
-    record: () => void
+    record: (marcoName: string) => void
     delete: (macroName: string) => void
+    update: (oldName: string, newName: string) => void
 }

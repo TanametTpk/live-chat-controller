@@ -1,4 +1,6 @@
 export default interface IMacroPlayer {
     play: (marcoName: string) => void
-    getMacroList: () => void
+    getMacroList: () => string[]
+    isPlaying: (macroName: string) => boolean
+    isAnyMacroPlaying: () => boolean
 }
