@@ -17,6 +17,10 @@ export interface LiveChatConfig {
     INTERVAL: number
 }
 
+export interface WebHookConfig {
+    urls: string[]
+}
+
 export const loadConfig = <T>(path: string): T => {
     const raw_configs: string = fs.readFileSync(path).toString()
     const configs: T = JSON.parse(raw_configs)
@@ -29,4 +33,8 @@ export const loadLiveChatConfig = (path: string): LiveChatConfig => {
 
 export const loadCommandConfig = (path: string): CommandConfig => {
     return loadConfig<CommandConfig>(path)
+}
+
+export const loadWebHookConfig = (path: string): WebHookConfig => {
+    return loadConfig<WebHookConfig>(path)
 }
