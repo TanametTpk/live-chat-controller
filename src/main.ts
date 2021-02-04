@@ -9,7 +9,7 @@ import ICommandPublisher from './services/interfaces/ICommandPublisher'
 import LocalIOPublisher from './services/LocalIOPublisher'
 import RobotJSIOController from './services/RobotJSIOController'
 import LiveChatAdapter from './services/LiveChatAdapter'
-import { loadCommandConfig, loadLiveChatConfig, loadWebHookConfig } from './utils/loadConfig'
+import { loadCommandConfig, loadDiscordConfig, loadLiveChatConfig, loadWebHookConfig } from './utils/loadConfig'
 import AbstractLiveChatAdapter from './services/abstracts/AbstractLiveChatAdapter'
 import LiveChatCustomCommandAdapter from './services/LiveChatCustomCommandAdapter'
 import IMacroPlayer from './services/interfaces/IMacroPlayer'
@@ -19,31 +19,34 @@ import DiscordChatPublisher from './services/DiscordChatPublisher'
 const liveChatConfig = loadLiveChatConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
 const webHookConfig = loadWebHookConfig('./webhook.json')
+const discordConfig = loadDiscordConfig('./discord.json')
 
 const ioController: RobotJSIOController = new RobotJSIOController()
+const localController: ICommandSubscriber = new LocalIOController(ioController)
 const macroController: IMacroPlayer = MacroManager.getInstance()
 
-const chatController: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
-const webHookController: ILiveChatSubscriber = new WebHookController(webHookConfig.urls)
+const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
+const webHookSubscriber: ILiveChatSubscriber = new WebHookController(webHookConfig.urls)
+
+const ioPublisher: ICommandPublisher = new LocalIOPublisher()
 const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(liveChatConfig)
-const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher('ODA2NzIxMjEwNjcwNzc2MzYy.YBtjrA.eNs7cs18ZIC5DBpFDpZMWHManGo')
+const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(discordConfig.token)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
 if (commandsConfig.useOnlyDefined) {
-    customChatCommandAdapter = new LiveChatCustomCommandAdapter(chatController, commandsConfig.commands)
+    customChatCommandAdapter = new LiveChatCustomCommandAdapter(chatSubscriber, commandsConfig.commands)
 }else {
-    customChatCommandAdapter = new LiveChatAdapter(chatController, commandsConfig.commands)
+    customChatCommandAdapter = new LiveChatAdapter(chatSubscriber, commandsConfig.commands)
 }
-
-const localController: ICommandSubscriber = new LocalIOController(ioController)
-const ioPublisher: ICommandPublisher = new LocalIOPublisher()
 
 ioPublisher.register(localController)
 ioPublisher.start()
 
-// chatPublisher.register(customChatCommandAdapter)
-// chatPublisher.register(webHookController)
-// chatPublisher.start()
+chatPublisher.register(customChatCommandAdapter)
+chatPublisher.register(webHookSubscriber)
+chatPublisher.start()
 
-discordPublisher.register(customChatCommandAdapter)
-discordPublisher.start()
+if (discordConfig.allow) {
+    discordPublisher.register(customChatCommandAdapter)
+    discordPublisher.start()
+}

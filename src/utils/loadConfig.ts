@@ -21,6 +21,11 @@ export interface WebHookConfig {
     urls: string[]
 }
 
+export interface DiscordConfig {
+    token: string
+    allow: boolean
+}
+
 export const loadConfig = <T>(path: string): T => {
     const raw_configs: string = fs.readFileSync(path).toString()
     const configs: T = JSON.parse(raw_configs)
@@ -37,4 +42,8 @@ export const loadCommandConfig = (path: string): CommandConfig => {
 
 export const loadWebHookConfig = (path: string): WebHookConfig => {
     return loadConfig<WebHookConfig>(path)
+}
+
+export const loadDiscordConfig = (path: string): DiscordConfig => {
+    return loadConfig<DiscordConfig>(path)
 }
