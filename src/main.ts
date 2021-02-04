@@ -4,34 +4,62 @@ import ILiveChatPublisher from './services/interfaces/ILiveChatPublisher'
 import ScrapingLiveChatPublisher from './services/ScrapingLiveChatPublisher'
 import ICommandSubscriber from './services/interfaces/ICommandSubscriber'
 import LocalIOController from './controllers/LocalIOController'
+import WebHookController from './controllers/WebHookController'
 import ICommandPublisher from './services/interfaces/ICommandPublisher'
 import LocalIOPublisher from './services/LocalIOPublisher'
 import RobotJSIOController from './services/RobotJSIOController'
 import LiveChatAdapter from './services/LiveChatAdapter'
-import { loadCommandConfig, loadLiveChatConfig } from './utils/loadConfig'
+import { loadCommandConfig, readConfig } from './utils/loadConfig'
 import AbstractLiveChatAdapter from './services/abstracts/AbstractLiveChatAdapter'
 import LiveChatCustomCommandAdapter from './services/LiveChatCustomCommandAdapter'
 import IMacroPlayer from './services/interfaces/IMacroPlayer'
 import MacroManager from './services/MacroManager'
+import DiscordChatPublisher from './services/DiscordChatPublisher'
+import TwitchChatPublisher from './services/TwitchChatPublisher'
 
-const liveChatConfig = loadLiveChatConfig('./config.json')
+const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
 
 const ioController: RobotJSIOController = new RobotJSIOController()
+const localController: ICommandSubscriber = new LocalIOController(ioController)
 const macroController: IMacroPlayer = MacroManager.getInstance()
 
-const chatController: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
-const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(liveChatConfig)
+const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
+const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
+
+const ioPublisher: ICommandPublisher = new LocalIOPublisher()
+const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
+const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
+const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
-if (commandsConfig.useOnlyDefined) customChatCommandAdapter = new LiveChatCustomCommandAdapter(chatController, commandsConfig.commands)
-else customChatCommandAdapter = new LiveChatAdapter(chatController, commandsConfig.commands)
+if (commandsConfig.useOnlyDefined) {
+    customChatCommandAdapter = new LiveChatCustomCommandAdapter(chatSubscriber, commandsConfig.commands)
+}else {
+    customChatCommandAdapter = new LiveChatAdapter(chatSubscriber, commandsConfig.commands)
+}
 
-const localController: ICommandSubscriber = new LocalIOController(ioController)
-const ioPublisher: ICommandPublisher = new LocalIOPublisher()
+let allowList: boolean[] = [
+    configs.youtube.allow,
+    configs.discord.allow,
+    configs.twitch.allow
+]
+
+let publishers: ILiveChatPublisher[] = [
+    chatPublisher,
+    discordPublisher,
+    twitchPublisher
+]
 
 ioPublisher.register(localController)
 ioPublisher.start()
 
-chatPublisher.register(customChatCommandAdapter)
-chatPublisher.start()
+for (let i = 0; i < publishers.length; i++) {
+    if (!allowList[i]) continue
+    const publisher = publishers[i];
+    
+    publisher.register(customChatCommandAdapter)
+    if (configs.webhooks.allow) publisher.register(webHookSubscriber)
+
+    publisher.start()
+}
