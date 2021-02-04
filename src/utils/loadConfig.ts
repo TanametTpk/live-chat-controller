@@ -10,7 +10,8 @@ export interface KeywordConfig {
     toCommand: string
 }
 
-export interface LiveChatConfig {
+export interface YoutubeConfig {
+    allow: boolean
     API_KEY: string
     CHANNEL_ID: string
     STREAM_ID: string
@@ -19,11 +20,24 @@ export interface LiveChatConfig {
 
 export interface WebHookConfig {
     urls: string[]
+    allow: boolean
 }
 
 export interface DiscordConfig {
     token: string
     allow: boolean
+}
+
+export interface TwitchConfig {
+    channel: string
+    allow: boolean
+}
+
+export interface Configs {
+    youtube: YoutubeConfig
+    discord: DiscordConfig
+    twitch: TwitchConfig
+    webhooks: WebHookConfig
 }
 
 export const loadConfig = <T>(path: string): T => {
@@ -32,8 +46,12 @@ export const loadConfig = <T>(path: string): T => {
     return configs
 }
 
-export const loadLiveChatConfig = (path: string): LiveChatConfig => {
-    return loadConfig<LiveChatConfig>(path)
+export const readConfig = (path: string): Configs => {
+    return loadConfig<Configs>(path)
+}
+
+export const loadYoutubeConfig = (path: string): YoutubeConfig => {
+    return loadConfig<YoutubeConfig>(path)
 }
 
 export const loadCommandConfig = (path: string): CommandConfig => {
@@ -46,4 +64,8 @@ export const loadWebHookConfig = (path: string): WebHookConfig => {
 
 export const loadDiscordConfig = (path: string): DiscordConfig => {
     return loadConfig<DiscordConfig>(path)
+}
+
+export const loadTwitchConfig = (path: string): TwitchConfig => {
+    return loadConfig<TwitchConfig>(path)
 }

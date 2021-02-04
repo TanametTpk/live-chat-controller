@@ -9,28 +9,28 @@ import ICommandPublisher from './services/interfaces/ICommandPublisher'
 import LocalIOPublisher from './services/LocalIOPublisher'
 import RobotJSIOController from './services/RobotJSIOController'
 import LiveChatAdapter from './services/LiveChatAdapter'
-import { loadCommandConfig, loadDiscordConfig, loadLiveChatConfig, loadWebHookConfig } from './utils/loadConfig'
+import { loadCommandConfig, readConfig } from './utils/loadConfig'
 import AbstractLiveChatAdapter from './services/abstracts/AbstractLiveChatAdapter'
 import LiveChatCustomCommandAdapter from './services/LiveChatCustomCommandAdapter'
 import IMacroPlayer from './services/interfaces/IMacroPlayer'
 import MacroManager from './services/MacroManager'
 import DiscordChatPublisher from './services/DiscordChatPublisher'
+import TwitchChatPublisher from './services/TwitchChatPublisher'
 
-const liveChatConfig = loadLiveChatConfig('./config.json')
+const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
-const webHookConfig = loadWebHookConfig('./webhook.json')
-const discordConfig = loadDiscordConfig('./discord.json')
 
 const ioController: RobotJSIOController = new RobotJSIOController()
 const localController: ICommandSubscriber = new LocalIOController(ioController)
 const macroController: IMacroPlayer = MacroManager.getInstance()
 
 const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
-const webHookSubscriber: ILiveChatSubscriber = new WebHookController(webHookConfig.urls)
+const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
 
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
-const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(liveChatConfig)
-const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(discordConfig.token)
+const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
+const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
+const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
 if (commandsConfig.useOnlyDefined) {
@@ -39,14 +39,27 @@ if (commandsConfig.useOnlyDefined) {
     customChatCommandAdapter = new LiveChatAdapter(chatSubscriber, commandsConfig.commands)
 }
 
+let allowList: boolean[] = [
+    configs.youtube.allow,
+    configs.discord.allow,
+    configs.twitch.allow
+]
+
+let publishers: ILiveChatPublisher[] = [
+    chatPublisher,
+    discordPublisher,
+    twitchPublisher
+]
+
 ioPublisher.register(localController)
 ioPublisher.start()
 
-chatPublisher.register(customChatCommandAdapter)
-chatPublisher.register(webHookSubscriber)
-chatPublisher.start()
+for (let i = 0; i < publishers.length; i++) {
+    if (!allowList[i]) continue
+    const publisher = publishers[i];
+    
+    publisher.register(customChatCommandAdapter)
+    if (configs.webhooks.allow) publisher.register(webHookSubscriber)
 
-if (discordConfig.allow) {
-    discordPublisher.register(customChatCommandAdapter)
-    discordPublisher.start()
+    publisher.start()
 }
