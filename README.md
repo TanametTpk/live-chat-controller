@@ -1,8 +1,8 @@
 # Introduction
-Live chat controller is code for control your pc(window only) with live chat on youtube
+Live chat controller is code for control your pc(window only) with live chat on youtube/discord
 
 # Features
-- get chat from youtube live chat and control pc
+- get chat from youtube/discord live chat and control pc
 - custom setting command
 - record and set input Macro for new command
 - local website UI for easier interaction and monitor (next release)
@@ -12,10 +12,10 @@ Live chat controller is code for control your pc(window only) with live chat on 
 - Python 3.6.5
 
 # บทนำ
-Live chat controller คือ โปรแกรมควบคุมคอม โดยดึงคำสั่งจาก live chat บน youtube
+Live chat controller คือ โปรแกรมควบคุมคอม โดยดึงคำสั่งจาก live chat บน youtube/discord
 
 # สิ่งที่ทำได้
-- ดึงข้อมูลจาก youtube chat มาทำงาน
+- ดึงข้อมูลจาก youtube/discord chat มาทำงาน
 - แก้ไข/ตั้งรูปแบบคำสั่งเอง
 - บันทึก และ ตั้ง Macro ให้เป็นคำสั่งใหม่
 - มี local Web UI ทำให้ติดต่อ และ สังเกตุการทำงานได้ง่ายขึ้น (ยังไม่เสร็จ)
