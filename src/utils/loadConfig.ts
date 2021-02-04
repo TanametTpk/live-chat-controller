@@ -50,22 +50,6 @@ export const readConfig = (path: string): Configs => {
     return loadConfig<Configs>(path)
 }
 
-export const loadYoutubeConfig = (path: string): YoutubeConfig => {
-    return loadConfig<YoutubeConfig>(path)
-}
-
 export const loadCommandConfig = (path: string): CommandConfig => {
     return loadConfig<CommandConfig>(path)
-}
-
-export const loadWebHookConfig = (path: string): WebHookConfig => {
-    return loadConfig<WebHookConfig>(path)
-}
-
-export const loadDiscordConfig = (path: string): DiscordConfig => {
-    return loadConfig<DiscordConfig>(path)
-}
-
-export const loadTwitchConfig = (path: string): TwitchConfig => {
-    return loadConfig<TwitchConfig>(path)
 }
