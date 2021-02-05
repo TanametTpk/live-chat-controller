@@ -28,7 +28,7 @@ export default class WebServerController {
 
     private setup(): void{
         this.app.get('/', (req: Request, res: Response) => {
-            res.sendFile(path.resolve(__dirname, '../templates/index.html'))
+            res.sendFile(path.resolve(__dirname, '../../templates/index.html'))
         })
 
         this.io.on("connection", (socket: Socket) => {
