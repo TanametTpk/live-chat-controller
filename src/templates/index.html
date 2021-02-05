@@ -20,6 +20,15 @@
         background-color: white;
       }
 
+      .bean {
+        padding: 8px;
+        background-color: yellowgreen;
+        border-radius: 50rem;
+        cursor: pointer;
+        text-align: center;
+        margin: 3px;
+      }
+
       .hidden {
         visibility: hidden;
       }
@@ -39,6 +48,7 @@
           let newDiv = document.createElement('div');
           newDiv.innerText = macro
           newDiv.id = `${i}`
+          newDiv.className = "bean"
           newDiv.onclick= function() {
             setTargetMacro(macro)
           }
@@ -80,7 +90,7 @@
         var text = document.getElementById('new-macro-name').value
         if (text.trim().length < 1 || !isNameInFormat(text)) return
 
-        // socket.emit("rename-macro", prevMacro, text)
+        socket.emit("rename-macro", prevMacro, text)
         hiddenCard()
       }
 
@@ -94,7 +104,7 @@
       }
 
       function isNameInFormat(name) {
-        var english = /^[A-Za-z0-9]*$/;
+        var english = /^[A-Za-z0-9 ]*$/;
         return english.test(name)
       }
 
