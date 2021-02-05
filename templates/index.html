@@ -90,6 +90,7 @@
         var text = document.getElementById('new-macro-name').value
         if (text.trim().length < 1 || !isNameInFormat(text)) return
 
+        console.log("sending");
         socket.emit("rename-macro", prevMacro, text)
         hiddenCard()
       }
