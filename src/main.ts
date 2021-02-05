@@ -16,6 +16,7 @@ import IMacroPlayer from './services/interfaces/IMacroPlayer'
 import MacroManager from './services/MacroManager'
 import DiscordChatPublisher from './services/DiscordChatPublisher'
 import TwitchChatPublisher from './services/TwitchChatPublisher'
+import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
@@ -28,9 +29,11 @@ const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController,
 const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
 
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
-const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
 const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
 const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
+let chatPublisher: ILiveChatPublisher
+if (configs.youtube.useAPI) chatPublisher = new YoutubeApiLiveChatPublisher(configs.youtube)
+else chatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
 if (commandsConfig.useOnlyDefined) {

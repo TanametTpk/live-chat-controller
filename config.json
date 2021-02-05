@@ -1,6 +1,7 @@
 {
     "youtube": {
         "allow": false,
+        "useAPI": false,
         "API_KEY": "API_KEY",
         "CHANNEL_ID": "CHANNEL_ID",
         "STREAM_ID": "STREAM_ID",
