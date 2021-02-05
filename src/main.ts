@@ -17,9 +17,12 @@ import MacroManager from './services/MacroManager'
 import DiscordChatPublisher from './services/DiscordChatPublisher'
 import TwitchChatPublisher from './services/TwitchChatPublisher'
 import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
+import WebServerController from './controllers/WebServerController'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
+
+const webServer: WebServerController = WebServerController.getInstance(3000)
 
 const ioController: RobotJSIOController = new RobotJSIOController()
 const localController: ICommandSubscriber = new LocalIOController(ioController)
@@ -66,3 +69,5 @@ for (let i = 0; i < publishers.length; i++) {
 
     publisher.start()
 }
+
+webServer.start()

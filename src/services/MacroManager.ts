@@ -1,6 +1,7 @@
 import IMacroPlayer from "./interfaces/IMacroPlayer";
 import IMacroRecorder from "./interfaces/IMacroRecorder";
 import util from 'util'
+import WebServerController from "../controllers/WebServerController";
 const exec = util.promisify(require('child_process').exec);
 
 async function listCommands(): Promise<string[] | undefined> {
@@ -26,7 +27,7 @@ async function removeMacro(name: string) {
 }
 
 async function renameMacro(oldname: string, newName: string) {
-    const { stderr } = await exec(`python ./macroRecorder/commandline.py -n ${oldname} -c update -t ${newName}`);
+    const { stderr } = await exec(`python ./macroRecorder/commandline.py -n ${oldname} -c update -t "${newName}"`);
     if (stderr) console.log('remove macro error:', stderr);
 }
 
@@ -56,6 +57,7 @@ export default class MacroManager implements IMacroRecorder, IMacroPlayer {
         }
 
         this.avaliableMacros = macros
+        WebServerController.getInstance().sendMacros(this.avaliableMacros)
     }
 
     public play(marcoName: string){
