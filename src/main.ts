@@ -16,9 +16,13 @@ import IMacroPlayer from './services/interfaces/IMacroPlayer'
 import MacroManager from './services/MacroManager'
 import DiscordChatPublisher from './services/DiscordChatPublisher'
 import TwitchChatPublisher from './services/TwitchChatPublisher'
+import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
+import WebServerController from './controllers/WebServerController'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
+
+const webServer: WebServerController = WebServerController.getInstance(3000)
 
 const ioController: RobotJSIOController = new RobotJSIOController()
 const localController: ICommandSubscriber = new LocalIOController(ioController)
@@ -28,9 +32,11 @@ const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController,
 const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
 
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
-const chatPublisher: ILiveChatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
 const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
 const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
+let chatPublisher: ILiveChatPublisher
+if (configs.youtube.useAPI) chatPublisher = new YoutubeApiLiveChatPublisher(configs.youtube)
+else chatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
 
 let customChatCommandAdapter: AbstractLiveChatAdapter
 if (commandsConfig.useOnlyDefined) {
@@ -63,3 +69,5 @@ for (let i = 0; i < publishers.length; i++) {
 
     publisher.start()
 }
+
+webServer.start()

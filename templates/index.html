@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Chat Controller by Techcast</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color:#1f2935;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card {
+        margin: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background-color: white;
+      }
+
+      .bean {
+        padding: 8px;
+        background-color: yellowgreen;
+        border-radius: 50rem;
+        cursor: pointer;
+        text-align: center;
+        margin: 3px;
+      }
+
+      .hidden {
+        visibility: hidden;
+      }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var prevMacro = ""
+
+      socket.on('macros', function(macros) {
+        var macroList = document.getElementsByClassName('macro-list')
+        if (macroList.length > 0) macroList = macroList[0]
+        macroList.innerHTML = ""
+
+        for (let i = 0; i < macros.length; i++) {
+          const macro = macros[i];
+          let newDiv = document.createElement('div');
+          newDiv.innerText = macro
+          newDiv.id = `${i}`
+          newDiv.className = "bean"
+          newDiv.onclick= function() {
+            setTargetMacro(macro)
+          }
+          macroList.appendChild(newDiv)
+        }
+
+        if (macros.length < 1) macroList.innerHTML = `don't have any macro!`
+      })
+
+      socket.on('new-macro', function(macroName) {
+        var macroList = document.getElementsByClassName('macro-list')
+        if (macroList.length > 0) macroList = macroList[0]
+        macroList.appendChild(macroName)
+
+        setTargetMacro(macroName)
+        showCard()
+      })
+
+      function setTargetMacro(target) {
+        prevMacro = target
+        document.getElementById('new-macro-name').value = target
+        document.getElementById('macro-name-display').innerHTML  = target
+        showCard()
+      }
+
+      function showCard() {
+        var newMacroCard = document.getElementsByClassName('new-macro')
+        if (newMacroCard.length > 0) newMacroCard = newMacroCard[0]
+        newMacroCard.classList.remove("hidden")
+      }
+
+      function hiddenCard() {
+        var newMacroCard = document.getElementsByClassName('new-macro')
+        if (newMacroCard.length > 0) newMacroCard = newMacroCard[0]
+        newMacroCard.classList.add("hidden")
+      }
+
+      function saveMacroName() {
+        var text = document.getElementById('new-macro-name').value
+        if (text.trim().length < 1 || !isNameInFormat(text)) return
+
+        socket.emit("rename-macro", prevMacro, text)
+        hiddenCard()
+      }
+
+      function removeMacroName() {
+        socket.emit("remove-macro", prevMacro)
+        hiddenCard()
+      }
+
+      function playMacro() {
+        socket.emit("play-macro", prevMacro)
+      }
+
+      function isNameInFormat(name) {
+        var english = /^[A-Za-z0-9 ]*$/;
+        return english.test(name)
+      }
+
+    </script>
+  </head>
+  <body>
+    <div class="card macro-list">
+      
+    </div>
+
+    <div class="card new-macro hidden">
+      <h3>Change Macro Name</h3>
+      <p id="macro-name-display"></p>
+      <input id="new-macro-name">
+
+      <button onclick="saveMacroName()">save</button>
+      <button onclick="playMacro()">play</button>
+      <button onclick="removeMacroName()">remove</button>
+    </div>
+  </body>
+</html>

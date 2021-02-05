@@ -444,9 +444,13 @@ def getCommands(name, filename):
 
 def update(oldName, newName, filename):
     macros = loadMacros(filename)
-    macros[newName] = macros[oldName]
-    del macros[oldName]
-    saveMacros(macros, filename)
+    if oldName == newName:
+        return
+        
+    if oldName in macros:
+        macros[newName] = macros[oldName]
+        del macros[oldName]
+        saveMacros(macros, filename)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Record Input/Output with commandline')

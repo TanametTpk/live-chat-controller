@@ -3,6 +3,7 @@ import IMacroPlayer from "../services/interfaces/IMacroPlayer";
 import IMacroRecorder from "../services/interfaces/IMacroRecorder";
 import ResetableIOController from "../services/interfaces/ResetableIOController";
 import MacroManager from "../services/MacroManager";
+import WebServerController from "./WebServerController";
 
 export default class LocalIOController implements ICommandSubscriber {
     private isRecording: boolean
@@ -41,6 +42,7 @@ export default class LocalIOController implements ICommandSubscriber {
     private stopRecordMacro() {
         if (this.isRecording){
             this.isRecording = false
+            WebServerController.getInstance().sendNewMacro(this.recordingMacroName)
             console.log("Save macro as name:", this.recordingMacroName)
             this.recordingMacroName = ""
         }

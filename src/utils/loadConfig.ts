@@ -16,6 +16,7 @@ export interface YoutubeConfig {
     CHANNEL_ID: string
     STREAM_ID: string
     INTERVAL: number
+    useAPI: boolean
 }
 
 export interface WebHookConfig {
