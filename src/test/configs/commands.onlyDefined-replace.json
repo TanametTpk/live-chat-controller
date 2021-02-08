@@ -20,7 +20,14 @@
             "toCommand": "no words defined"
         }
     ],
-    "replaces": [],
-    "useOnlyDefined": false,
-    "useReplace": false
+    "replaces": [
+        {
+            "words": [
+                "gg"
+            ],
+            "toCommand": "t2"
+        }
+    ],
+    "useOnlyDefined": true,
+    "useReplace": true
 }

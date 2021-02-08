@@ -20,7 +20,15 @@
             "toCommand": "no words defined"
         }
     ],
-    "replaces": [],
+    "replaces": [
+        {
+            "words": [
+                "ขวา",
+                "right"
+            ],
+            "toCommand": "_"
+        }
+    ],
     "useOnlyDefined": false,
-    "useReplace": false
+    "useReplace": true
 }

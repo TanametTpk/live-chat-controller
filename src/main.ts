@@ -18,6 +18,7 @@ import DiscordChatPublisher from './services/DiscordChatPublisher'
 import TwitchChatPublisher from './services/TwitchChatPublisher'
 import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
 import WebServerController from './controllers/WebServerController'
+import LiveChatReplaceAdapter from './services/LiveChatReplaceAdapter'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
@@ -43,6 +44,10 @@ if (commandsConfig.useOnlyDefined) {
     customChatCommandAdapter = new LiveChatCustomCommandAdapter(chatSubscriber, commandsConfig.commands)
 }else {
     customChatCommandAdapter = new LiveChatAdapter(chatSubscriber, commandsConfig.commands)
+}
+
+if (commandsConfig.useReplace) {
+    customChatCommandAdapter = new LiveChatReplaceAdapter(customChatCommandAdapter, commandsConfig.replaces)
 }
 
 let allowList: boolean[] = [

@@ -2,6 +2,8 @@ import fs from 'fs'
 
 export interface CommandConfig {
     commands: KeywordConfig[]
+    replaces: KeywordConfig[]
+    useReplace: boolean
     useOnlyDefined: boolean
 }
 
