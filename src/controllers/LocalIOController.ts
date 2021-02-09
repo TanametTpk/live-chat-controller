@@ -23,6 +23,7 @@ export default class LocalIOController implements ICommandSubscriber {
             if (command === "reset") this.reset()
             else if (command === "record") this.recordMacro()
             else if (command === "stop-record") this.stopRecordMacro()
+            else if (command === "exit") this.exit()
         }
     }
 
@@ -51,5 +52,9 @@ export default class LocalIOController implements ICommandSubscriber {
     private reset() {
         console.log("Reset controller completed.");
         this.ioController.reset()
+    }
+
+    private exit() {
+        process.exit()
     }
 }
