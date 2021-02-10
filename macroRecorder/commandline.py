@@ -14,7 +14,7 @@ import zlib
 
 RECORD_MOVEMENT = True
 
-MIN_FPS = 20
+MIN_FPS = 60
 
 WAIT_BETWEEN_ACTIONS = True
 
@@ -199,7 +199,7 @@ def hookAllEvents(event):
                 x = round(float(x)/screen_res[0], 5)
                 y = round(float(y)/screen_res[1], 5)
             if event.action == winput.WM_MOUSEMOVE:
-                if RECORD_MOVEMENT: 
+                if RECORD_MOVEMENT:
                     current_macro.append((time_delta, winput.WM_MOUSEMOVE, x, y))
             else:
                 current_macro.append((time_delta, event.action, x, y))
@@ -246,6 +246,7 @@ def playMacro(macro):
     total_time = 0
     start_time = time.time()
     last_time = 0
+
     for action in macro:
         # if (STOP_PLAYING):
         #     break
@@ -273,7 +274,6 @@ def playMacro(macro):
         elif action_type == winput.WM_MOUSEMOVE:
             desired_position = (int(round(action[2] * screen_res[0],0)), int(round(action[3] * screen_res[1],0))) if IS_RELATIVE else (int(action[2]), int(action[3]))
             user32.SetCursorPos(*desired_position)
-
         else:
             current_mouse_position = getMousePosition()
             relative_position = (int(round(action[2] * screen_res[0],0)) - current_mouse_position[0], int(round(action[3] * screen_res[1],0)) - current_mouse_position[1]) if IS_RELATIVE else (int(action[2]) - current_mouse_position[0], int(action[3]) - current_mouse_position[1])
@@ -478,7 +478,7 @@ if __name__ == "__main__":
         "remove": remove,
         "list": getCommands
     }
-
+    time.sleep(1)
     createFileIfNotExist(options["filename"])
 
     if args.to_name:

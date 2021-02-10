@@ -104,5 +104,7 @@
             "toCommand": "macro-8662692693327605"
         }
     ],
-    "useOnlyDefined": true
+    "replaces": [],
+    "useOnlyDefined": true,
+    "useReplace": false
 }

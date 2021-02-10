@@ -20,5 +20,7 @@
             "toCommand": "no words defined"
         }
     ],
-    "useOnlyDefined": true
+    "replaces": [],
+    "useOnlyDefined": true,
+    "useReplace": false
 }
