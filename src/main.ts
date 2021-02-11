@@ -19,6 +19,7 @@ import TwitchChatPublisher from './services/TwitchChatPublisher'
 import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
 import WebServerController from './controllers/WebServerController'
 import LiveChatReplaceAdapter from './services/LiveChatReplaceAdapter'
+import PoolCommandAdapter from './services/PoolCommandAdapter'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
@@ -30,7 +31,7 @@ const localController: ICommandSubscriber = new LocalIOController(ioController)
 const macroController: IMacroPlayer = MacroManager.getInstance()
 
 const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
-const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
+let webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
 
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
 const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
@@ -50,6 +51,7 @@ if (commandsConfig.useReplace) {
     customChatCommandAdapter = new LiveChatReplaceAdapter(customChatCommandAdapter, commandsConfig.replaces)
 }
 
+webHookSubscriber = new PoolCommandAdapter(webHookSubscriber, 5)
 let allowList: boolean[] = [
     configs.youtube.allow,
     configs.discord.allow,

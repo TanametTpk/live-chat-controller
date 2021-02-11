@@ -21,6 +21,6 @@
         }
     ],
     "replaces": [],
-    "useOnlyDefined": true,
+    "useOnlyDefined": false,
     "useReplace": false
 }
