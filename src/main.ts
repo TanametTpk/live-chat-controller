@@ -51,7 +51,7 @@ if (commandsConfig.useReplace) {
     customChatCommandAdapter = new LiveChatReplaceAdapter(customChatCommandAdapter, commandsConfig.replaces)
 }
 
-webHookSubscriber = new PoolCommandAdapter(webHookSubscriber, 5)
+webHookSubscriber = new PoolCommandAdapter(webHookSubscriber, commandsConfig.replaces, commandsConfig.pool)
 let allowList: boolean[] = [
     configs.youtube.allow,
     configs.discord.allow,

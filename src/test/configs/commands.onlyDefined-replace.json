@@ -29,5 +29,9 @@
         }
     ],
     "useOnlyDefined": true,
-    "useReplace": true
+    "useReplace": true,
+    "usePool": false,
+    "pool": {
+        "defaultRatio": 3
+    }
 }
