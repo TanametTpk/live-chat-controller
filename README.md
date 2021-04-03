@@ -15,10 +15,11 @@ Live chat controller is code for control your pc(window only) with live chat on 
 Live chat controller คือ โปรแกรมควบคุมคอม โดยดึงคำสั่งจาก live chat บน youtube/discord/twitch
 
 # สิ่งที่ทำได้
-- ดึงข้อมูลจาก youtube/discord/twitch chat มาทำงาน
+- ดึงข้อมูลจาก youtube/discord/twitch/facebook chat มาทำงาน
 - แก้ไข/ตั้งรูปแบบคำสั่งเอง
 - บันทึก และ ตั้ง Macro ให้เป็นคำสั่งใหม่
 - มี local Web UI ทำให้ติดต่อ และ สังเกตุการทำงานได้ง่ายขึ้น (ยังไม่เสร็จ)
+- มี webhook ส่งไปให้ server อื่นๆได้
 
 # สื่งที่ต้องมี
 - ลง Node js ด้วย
