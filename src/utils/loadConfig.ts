@@ -43,10 +43,17 @@ export interface TwitchConfig {
     allow: boolean
 }
 
+export interface FacebookConfig {
+    allow: boolean
+    access_token: string
+    video_id: string
+}
+
 export interface Configs {
     youtube: YoutubeConfig
     discord: DiscordConfig
     twitch: TwitchConfig
+    facebook: FacebookConfig
     webhooks: WebHookConfig
 }
 

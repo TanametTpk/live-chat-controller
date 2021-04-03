@@ -35,6 +35,7 @@ button_choose_stop_recording_key = None
 root = None
 
 stop_recording_key = winput.VK_ESCAPE
+STOP_PLAYING = False
 
 macros = {}
 current_macro = []
@@ -180,6 +181,16 @@ def getMousePosition():
     user32.GetCursorPos(ctypes.byref(pt))
     return (pt.x, pt.y)
 
+def hookEndPlaying(event):
+    global STOP_PLAYING
+    key_vkCode = event.vkCode
+    if event.action == winput.WM_KEYDOWN:
+        if key_vkCode == stop_recording_key:
+            STOP_PLAYING = True
+            winput.unhook_keyboard()
+            winput.stop()
+            return
+
 def hookAllEvents(event):
     global current_macro, time_delta, start_time, last_time, RECORD_MOVEMENT, hookManager, options, stop_recording_key, IS_RELATIVE, screen_res, last_flip, MIN_FPS
     IS_RELATIVE = (IS_RELATIVE or options["relative"])
@@ -246,10 +257,11 @@ def playMacro(macro):
     total_time = 0
     start_time = time.time()
     last_time = 0
+    winput.hook_keyboard(hookEndPlaying)
 
     for action in macro:
-        # if (STOP_PLAYING):
-        #     break
+        if (STOP_PLAYING):
+            break
         this_time = time.time()
         total_time += action[0]
         if (this_time - last_flip) > 1./MIN_FPS:
@@ -462,6 +474,7 @@ if __name__ == "__main__":
     parser.add_argument('--record_mouse', type=str2bool, default=True, help="record mouse")
     parser.add_argument('--record_keyboard', type=str2bool, default=True, help="record keyboard")
     parser.add_argument('--once', type=str2bool, default=False, help="use recorded macros to be playable once only")
+    parser.add_argument('--loop', type=int, default=1, help="use for do action many times.")
     args = parser.parse_args()
 
     options = {
@@ -485,6 +498,9 @@ if __name__ == "__main__":
         update(args.name, args.to_name, options["filename"])
         exit()
 
+    count = args.loop
+
     for command in commands:
         if args.command == command:
-            commands[command](args.name, options["filename"])
+            for c in range(count):
+                commands[command](args.name, options["filename"])
