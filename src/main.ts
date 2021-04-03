@@ -19,6 +19,8 @@ import TwitchChatPublisher from './services/TwitchChatPublisher'
 import YoutubeApiLiveChatPublisher from './services/YoutubeApiLiveChatPublisher'
 import WebServerController from './controllers/WebServerController'
 import LiveChatReplaceAdapter from './services/LiveChatReplaceAdapter'
+import PoolCommandAdapter from './services/PoolCommandAdapter'
+import FacebookPublisher from './services/FacebookPublisher'
 
 const configs = readConfig('./config.json')
 const commandsConfig = loadCommandConfig('./commands.json')
@@ -30,11 +32,13 @@ const localController: ICommandSubscriber = new LocalIOController(ioController)
 const macroController: IMacroPlayer = MacroManager.getInstance()
 
 const chatSubscriber: ILiveChatSubscriber = new LiveChatController(ioController, ioController, macroController)
-const webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
+let webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webhooks.urls)
 
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
 const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
 const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
+const facebookPublisher: ILiveChatPublisher = new FacebookPublisher(configs.facebook.access_token, configs.facebook.video_id, configs.facebook.comment_rate)
+
 let chatPublisher: ILiveChatPublisher
 if (configs.youtube.useAPI) chatPublisher = new YoutubeApiLiveChatPublisher(configs.youtube)
 else chatPublisher = new ScrapingLiveChatPublisher(configs.youtube)
@@ -50,16 +54,21 @@ if (commandsConfig.useReplace) {
     customChatCommandAdapter = new LiveChatReplaceAdapter(customChatCommandAdapter, commandsConfig.replaces)
 }
 
+if (commandsConfig.usePool) {
+    webHookSubscriber = new PoolCommandAdapter(webHookSubscriber, commandsConfig.replaces, commandsConfig.pool)
+}
 let allowList: boolean[] = [
     configs.youtube.allow,
     configs.discord.allow,
-    configs.twitch.allow
+    configs.twitch.allow,
+    configs.facebook.allow
 ]
 
 let publishers: ILiveChatPublisher[] = [
     chatPublisher,
     discordPublisher,
-    twitchPublisher
+    twitchPublisher,
+    facebookPublisher
 ]
 
 ioPublisher.register(localController)

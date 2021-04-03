@@ -1,5 +1,4 @@
 import MockChatController from "../controllers/MockChatController"
-import AbstractLiveChatAdapter from "../services/abstracts/AbstractLiveChatAdapter"
 import ILiveChatPublisher from "../services/interfaces/ILiveChatPublisher"
 import ILiveChatSubscriber from "../services/interfaces/ILiveChatSubscriber"
 import LiveChatAdapter from "../services/LiveChatAdapter"
@@ -8,6 +7,7 @@ import MockChatPublisher from "../services/MockChatPublisher"
 import { loadCommandConfig } from "../utils/loadConfig"
 import path from 'path'
 import LiveChatReplaceAdapter from "../services/LiveChatReplaceAdapter"
+import PoolCommandAdapter from "../services/PoolCommandAdapter"
 
 const commandsConfig = loadCommandConfig(path.resolve(__dirname, './configs/commands.onlyDefined.json'))
 
@@ -16,7 +16,10 @@ const mockPublisher: ILiveChatPublisher = new MockChatPublisher([
     "ขวาค้าง",
     "right holds",
     "t",
-    "gg"
+    "t",
+    "gg",
+    "gg",
+    "gg",
 ])
 
 let customChatCommandAdapter: ILiveChatSubscriber
@@ -26,6 +29,8 @@ else customChatCommandAdapter = new LiveChatAdapter(mockController, commandsConf
 if (commandsConfig.useReplace) {
     customChatCommandAdapter = new LiveChatReplaceAdapter(customChatCommandAdapter, commandsConfig.replaces)
 }
+
+customChatCommandAdapter = new PoolCommandAdapter(customChatCommandAdapter, commandsConfig.replaces, commandsConfig.pool)
 
 mockPublisher.register(customChatCommandAdapter)
 mockPublisher.start()
