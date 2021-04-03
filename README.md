@@ -2,10 +2,11 @@
 Live chat controller is code for control your pc(window only) with live chat on youtube/discord/twitch
 
 # Features
-- get chat from youtube/discord/twitch live chat and control pc
+- get chat from youtube/discord/twitch/facebook live chat and control pc
 - custom setting command
 - record and set input Macro for new command
 - local website UI for easier interaction and monitor (next release)
+- have webhook
 
 # Requirements
 - Node js
