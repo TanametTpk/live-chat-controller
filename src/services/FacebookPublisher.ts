@@ -7,8 +7,8 @@ export default class TwitchChatPublisher implements ILiveChatPublisher {
     private client: EventSource
     private subscribers: ILiveChatSubscriber[] = [];
 
-    public constructor(access_token: string, video_id: string) {
-        this.client = new EventSource(`https://streaming-graph.facebook.com/${video_id}/live_comments?access_token=${access_token}&comment_rate=one_per_two_seconds&fields=from{name,id},message`)
+    public constructor(access_token: string, video_id: string, comment_rate: string) {
+        this.client = new EventSource(`https://streaming-graph.facebook.com/${video_id}/live_comments?access_token=${access_token}&comment_rate=${comment_rate}&fields=from{name,id},message`)
     }
 
     public start = (): void => {          

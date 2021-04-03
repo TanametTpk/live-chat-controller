@@ -37,7 +37,7 @@ let webHookSubscriber: ILiveChatSubscriber = new WebHookController(configs.webho
 const ioPublisher: ICommandPublisher = new LocalIOPublisher()
 const discordPublisher: ILiveChatPublisher = new DiscordChatPublisher(configs.discord.token)
 const twitchPublisher: ILiveChatPublisher = new TwitchChatPublisher(configs.twitch.channel)
-const facebookPublisher: ILiveChatPublisher = new FacebookPublisher(configs.facebook.access_token, configs.facebook.video_id)
+const facebookPublisher: ILiveChatPublisher = new FacebookPublisher(configs.facebook.access_token, configs.facebook.video_id, configs.facebook.comment_rate)
 
 let chatPublisher: ILiveChatPublisher
 if (configs.youtube.useAPI) chatPublisher = new YoutubeApiLiveChatPublisher(configs.youtube)
